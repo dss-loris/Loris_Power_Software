@@ -88,6 +88,7 @@
 #include "CommandTable.h"
 #include "Utilities.h"
 #include "GPIO.h"
+#include "I2C.h"
 
 
 int main(void)
@@ -97,15 +98,42 @@ int main(void)
   WDTCTL = WDTPW+WDTHOLD;                   // Stop watchdog timer
   init_UART_A1();
   init_ADC();
+  init_I2C_B0();
+
   setOutputPins();
+  setInputPins();
+
   __bis_SR_register(GIE);
+
+  printString("COMMANDS:\n\r\n");
+
+  printString("ENABLE = 0\n\r");
+  printString("ARGUMENTS = 0 (OBC) | 1(PAYLOAD) | 2(RF) | 3(ACS)\n\r\n");
+
+  printString("DISABLE = 1\n\r");
+  printString("ARGUMENTS = 0 (OBC) | 1(PAYLOAD) | 2(RF) | 3(ACS)\n\r\n");
+
+  printString("POWER MODE = 2\n\r");
+  printString("ARGUMENTS = 0 (NORMAL) | 1(RADIO) | 2(PICTURE)\n\r\n");
+
+  printString("MEASURE LINE LEVEL = 3\n\r");
+  printString("ARGUMENTS = 0 (OBC & PAYLOAD VOLATAGE)\n\r");
+  printString("**FOR TESTING**\n\r");
+
+  printString("CONFIGURE LTC2942 CC = 4\n\r");
+  printString("ARGUMENTS = 0 (CONTROL REGISTER; NORMAL MODE)\n\r\n");
+  printString("**FOR TESTING**\n\r");
+
+  printString("ENTER AS: (command)(argument)\n\r\n");
+
 
   while(1)
   {
 
       if(dequeue(INPUT, &receivedInterrupt))
       {
-          switch(receivedInterrupt.protocol)
+
+         switch(receivedInterrupt.protocol)
                       {
                       case UART :
                        switch(receivedInterrupt.data)
@@ -126,13 +154,16 @@ int main(void)
                           default:
                               if(addToBuffer_UART(toupper(receivedInterrupt.data))==SUCCESS)
                               {
-                                  enqueue(OUTPUT,receivedInterrupt);
+                                  enqueue(OUTPUT_UART,receivedInterrupt);
                               }
 
                           }
                           break;
                       case I2C:
                           break;
+                      case FAULT:
+                          printString("FAULT ON RF LINE\n\r");
+
                       default:
                           break;
                       }

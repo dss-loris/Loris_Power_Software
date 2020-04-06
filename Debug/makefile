@@ -14,6 +14,7 @@ ORDERED_OBJS += \
 "./CommandTable.obj" \
 "./GPIO.obj" \
 "./HoldingBuffer.obj" \
+"./I2C.obj" \
 "./Queue.obj" \
 "./UART.obj" \
 "./Utilities.obj" \
@@ -162,8 +163,8 @@ LorisPower.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "ADC.obj" "CommandTable.obj" "GPIO.obj" "HoldingBuffer.obj" "Queue.obj" "UART.obj" "Utilities.obj" "main.obj" 
-	-$(RM) "ADC.d" "CommandTable.d" "GPIO.d" "HoldingBuffer.d" "Queue.d" "UART.d" "Utilities.d" "main.d" 
+	-$(RM) "ADC.obj" "CommandTable.obj" "GPIO.obj" "HoldingBuffer.obj" "I2C.obj" "Queue.obj" "UART.obj" "Utilities.obj" "main.obj" 
+	-$(RM) "ADC.d" "CommandTable.d" "GPIO.d" "HoldingBuffer.d" "I2C.d" "Queue.d" "UART.d" "Utilities.d" "main.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

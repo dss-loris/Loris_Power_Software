@@ -13,6 +13,7 @@ C_SRCS += \
 ../CommandTable.c \
 ../GPIO.c \
 ../HoldingBuffer.c \
+../I2C.c \
 ../Queue.c \
 ../UART.c \
 ../Utilities.c \
@@ -23,6 +24,7 @@ C_DEPS += \
 ./CommandTable.d \
 ./GPIO.d \
 ./HoldingBuffer.d \
+./I2C.d \
 ./Queue.d \
 ./UART.d \
 ./Utilities.d \
@@ -33,6 +35,7 @@ OBJS += \
 ./CommandTable.obj \
 ./GPIO.obj \
 ./HoldingBuffer.obj \
+./I2C.obj \
 ./Queue.obj \
 ./UART.obj \
 ./Utilities.obj \
@@ -43,6 +46,7 @@ OBJS__QUOTED += \
 "CommandTable.obj" \
 "GPIO.obj" \
 "HoldingBuffer.obj" \
+"I2C.obj" \
 "Queue.obj" \
 "UART.obj" \
 "Utilities.obj" \
@@ -53,6 +57,7 @@ C_DEPS__QUOTED += \
 "CommandTable.d" \
 "GPIO.d" \
 "HoldingBuffer.d" \
+"I2C.d" \
 "Queue.d" \
 "UART.d" \
 "Utilities.d" \
@@ -63,6 +68,7 @@ C_SRCS__QUOTED += \
 "../CommandTable.c" \
 "../GPIO.c" \
 "../HoldingBuffer.c" \
+"../I2C.c" \
 "../Queue.c" \
 "../UART.c" \
 "../Utilities.c" \

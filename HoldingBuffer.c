@@ -45,6 +45,7 @@ int removeFromBuffer_UART(void)
 {
     if(holdingBuffer_UART.writePtr>EMPTY)
     {
+            holdingBuffer_UART.buffer[holdingBuffer_UART.writePtr] = NUL;
             holdingBuffer_UART.writePtr--;
             return SUCCESS;
     }

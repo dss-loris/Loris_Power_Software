@@ -11,6 +11,7 @@ enum    powerMode {NORMAL,RADIO,PICTURE};
 #ifndef GLOBAL_GPIO
 #define GLOBAL_GPIO
 
+extern void setInputPins(void);
 extern void setOutputPins(void);
 extern void setPin(int);
 extern void clearPin(int);

@@ -13,9 +13,20 @@
 #include "UART.h"
 #include "HoldingBuffer.h"
 
-/*Declare queue array for INPUT (0) and OUTPUT (1) interrupts*/
-static queue interruptQueues[NUMBER_OF_QUEUES][NUMBER_OF_PROTOCOLS]={{{{RESET},RESET,RESET},{{RESET},RESET,RESET}},{{{RESET},RESET,RESET},{{RESET},RESET,RESET}}};
+/*Declare queue array for
+ * INPUT (0),
+ * OUTPUT_UART (1),
+ * and OUTPUT_I2C (2)
+ * interrupts*/
+static queue interruptQueues[NUMBER_OF_QUEUES] =
+    {{{RESET},RESET,RESET},{{RESET},RESET,RESET},{{RESET},RESET,RESET}};
 
+static int outputCountI2C = 0;
+
+int getOutputCountI2C(void)
+{
+    return outputCountI2C;
+}
 /*
  * @brief   Adds an interrupt to an interrupt queue.
  * @param   [in] int queueType: specifies which queue to add to
@@ -31,24 +42,22 @@ static queue interruptQueues[NUMBER_OF_QUEUES][NUMBER_OF_PROTOCOLS]={{{{RESET},R
  */
 int enqueue(int queueType, interruptType it)
 {
-    if((queueType==OUTPUT)&&(interruptQueues[queueType][it.protocol].writePtr==interruptQueues[queueType][it.protocol].readPtr))//buffer is empty
+    if((queueType==OUTPUT_UART)&&(interruptQueues[queueType].writePtr==interruptQueues[queueType].readPtr))//buffer is empty
     {
-        if(it.protocol)
-        {
-
-        }else
-        {
-            force_UART_A1_Output(it.data);
-        }
-           return EMPTY;
+        force_UART_A1_Output(it.data);
+        return EMPTY;
+    }else if(queueType==OUTPUT_I2C)
+    {
+        outputCountI2C++;
     }
 
     /* gives circular queue functionality*/
-    unsigned int tmpPtr = (interruptQueues[queueType][it.protocol].writePtr+1)&(MAX_QUEUE_SIZE-1);
-    if((tmpPtr == interruptQueues[queueType][it.protocol].readPtr)){return FULL;}
+    unsigned int tmpPtr = (interruptQueues[queueType].writePtr+1)&(MAX_QUEUE_SIZE-1);
+    if((tmpPtr == interruptQueues[queueType].readPtr)){return FULL;}
     /* put character in queue and increment write ptr */
-    interruptQueues[queueType][it.protocol].fifo[interruptQueues[queueType][it.protocol].writePtr]= it;
-    interruptQueues[queueType][it.protocol].writePtr =tmpPtr;
+    interruptQueues[queueType].fifo[interruptQueues[queueType].writePtr].data = it.data;
+    interruptQueues[queueType].fifo[interruptQueues[queueType].writePtr].protocol = it.protocol;
+    interruptQueues[queueType].writePtr = tmpPtr;
 
     return SUCCESS;
 }
@@ -68,15 +77,17 @@ int enqueue(int queueType, interruptType it)
  */
 int dequeue( int queueType, interruptType* it)
 {
-    if((interruptQueues[queueType][it->protocol].writePtr == interruptQueues[queueType][it->protocol].readPtr))//buffer is empty
+    if((interruptQueues[queueType].writePtr == interruptQueues[queueType].readPtr))//buffer is empty
     {
         return EMPTY;
+    }else if(queueType==OUTPUT_I2C)
+    {
+        outputCountI2C--;
     }
-
-    it->data = interruptQueues[queueType][it->protocol].fifo[interruptQueues[queueType][it->protocol].readPtr].data;
-    it->protocol = interruptQueues[queueType][it->protocol].fifo[interruptQueues[queueType][it->protocol].readPtr].protocol;
+    it->data = interruptQueues[queueType].fifo[interruptQueues[queueType].readPtr].data;
+    it->protocol = interruptQueues[queueType].fifo[interruptQueues[queueType].readPtr].protocol;
     /* gives circular queue functionality*/
-    interruptQueues[queueType][it->protocol].readPtr=(interruptQueues[queueType][it->protocol].readPtr+1)&(MAX_QUEUE_SIZE-1);
+    interruptQueues[queueType].readPtr=(interruptQueues[queueType].readPtr+1)&(MAX_QUEUE_SIZE-1);
 
     return SUCCESS;
 }

@@ -18,6 +18,7 @@ main.obj: ../HoldingBuffer.h
 main.obj: ../CommandTable.h
 main.obj: ../Utilities.h
 main.obj: ../GPIO.h
+main.obj: ../I2C.h
 
 ../main.c: 
 C:/ti/ccsv7/ccs_base/msp430/include/msp430.h: 
@@ -37,3 +38,4 @@ C:/ti/ccsv7/tools/compiler/ti-cgt-msp430_16.9.11.LTS/include/_isfuncdcl.h:
 ../CommandTable.h: 
 ../Utilities.h: 
 ../GPIO.h: 
+../I2C.h: 

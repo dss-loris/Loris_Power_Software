@@ -1,1 +1,1 @@
-"./ADC.obj" "./CommandTable.obj" "./GPIO.obj" "./HoldingBuffer.obj" "./Queue.obj" "./UART.obj" "./Utilities.obj" "./main.obj" "../lnk_msp430f5529.cmd" -llibmath.a -llibc.a 
+"./ADC.obj" "./CommandTable.obj" "./GPIO.obj" "./HoldingBuffer.obj" "./I2C.obj" "./Queue.obj" "./UART.obj" "./Utilities.obj" "./main.obj" "../lnk_msp430f5529.cmd" -llibmath.a -llibc.a 

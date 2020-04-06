@@ -61,7 +61,7 @@ void printString(char* string)
     while(*string)
     {
         out.data =*(string++);
-        enqueue( OUTPUT,out);
+        enqueue( OUTPUT_UART,out);
     }
 }
 
@@ -83,7 +83,7 @@ void __attribute__ ((interrupt(USCI_A1_VECTOR))) USCI_A1_ISR (void)
       enqueue(INPUT, inputUART);                // TX -> RXed character
       break;
   case 4:
-      if(dequeue( OUTPUT, &outputUART))
+      if(dequeue( OUTPUT_UART, &outputUART))
       {
           force_UART_A1_Output(outputUART.data);
       }

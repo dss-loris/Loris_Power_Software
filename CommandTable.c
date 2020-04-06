@@ -14,17 +14,18 @@
 #include "CommandTable.h"
 #include "UART.h"
 #include "Utilities.h"
+#include "Queue.h"
 #include "GPIO.h"
+#include "InterruptType.h"
 #include "ADC.h"
+#include "I2C.h"
 
 #define TURN_ON '0'
 #define TURN_OFF '1'
 #define POWER_MODE '2'
 #define DATA_REQUEST '3'
-
-
-
-
+#define COULOMB_COUNT_INIT '4'//testing will eventually part of Data request
+#define COULOMB_COUNT '5'
 
 
 /*
@@ -42,6 +43,13 @@
  *          are passed to the respective function
  *
  */
+
+#define CC_CONTROL_R 0x01
+#define CC_CONTROL_VALUE 0x3c
+
+static interruptType cc_register = {I2C,NUL};
+static interruptType cc_value = {I2C,NUL};
+
 void process( char* serializedCommand)
 {
     int pinNumber;
@@ -89,6 +97,24 @@ void process( char* serializedCommand)
         printString("Voltage PAYLOAD: ");
         printString(voltPayload);
         printString(NEW_LINE);
+
+        break;
+    case COULOMB_COUNT_INIT:
+
+        printString("Configure LTC2942\n\r ");
+        printString("Control_R: DEFAULT\n\r ");
+        cc_register.data = CC_CONTROL_R;
+        cc_value.data = CC_CONTROL_VALUE;
+        enqueue(OUTPUT_I2C, cc_register);
+        enqueue(OUTPUT_I2C, cc_value);
+        Transmit();
+
+        break;
+    case COULOMB_COUNT:
+
+        printString("\n\rEntering ");
+
+        printString("Power Mode ");
 
         break;
     default:

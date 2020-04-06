@@ -7,12 +7,11 @@
  * @date    10-Oct-2019 (Last Modified)
  */
 #pragma once
-enum queueType { INPUT, OUTPUT};
+enum queueType { INPUT, OUTPUT_UART, OUTPUT_I2C};
 #include "InterruptType.h"
 
 #define MAX_QUEUE_SIZE 128
-#define NUMBER_OF_QUEUES 2
-#define NUMBER_OF_PROTOCOLS 2
+#define NUMBER_OF_QUEUES 3
 /*
  * @brief   queue structure
  * @details interruptType fifo[]: array for folding the interrupt structures
@@ -33,5 +32,6 @@ typedef struct queue_
 
         extern int enqueue(int,interruptType);
         extern int dequeue(int,interruptType*);
+        extern int getOutputCountI2C(void);
 
 #endif// GLOBAL_QUEUES
