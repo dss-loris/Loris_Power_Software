@@ -101,7 +101,7 @@ void process( char* serializedCommand)
         break;
     case COULOMB_COUNT_INIT:
 
-        printString("Configure LTC2942\n\r ");
+        printString("\n\rConfigure LTC2942\n\r ");
         printString("Control_R: DEFAULT\n\r ");
         cc_register.data = CC_CONTROL_R;
         cc_value.data = CC_CONTROL_VALUE;
@@ -112,9 +112,28 @@ void process( char* serializedCommand)
         break;
     case COULOMB_COUNT:
 
-        printString("\n\rEntering ");
+        printString("\n\rCOMMANDS:\n\r\n");
 
-        printString("Power Mode ");
+        printString("ENABLE = 0\n\r");
+        printString("ARGUMENTS = 0 (OBC) | 1(PAYLOAD) | 2(RF) | 3(ACS)\n\r\n");
+
+        printString("DISABLE = 1\n\r");
+        printString("ARGUMENTS = 0 (OBC) | 1(PAYLOAD) | 2(RF) | 3(ACS)\n\r\n");
+
+        printString("POWER MODE = 2\n\r");
+        printString("ARGUMENTS = 0 (NORMAL) | 1(RADIO) | 2(PICTURE)\n\r\n");
+
+        printString("MEASURE LINE LEVEL = 3\n\r");
+        printString("ARGUMENTS = 0 (OBC & PAYLOAD VOLATAGE)\n\r");
+        printString("**FOR TESTING**\n\r");
+
+        printString("CONFIGURE LTC2942 CC = 4\n\r");
+        printString("ARGUMENTS = 0 (CONTROL REGISTER; NORMAL MODE)\n\r");
+        printString("**FOR TESTING**\n\r\n");
+
+        printString("Print Commands for debugging = 5\n\r\n");
+
+        printString("ENTER AS: (command)(argument)\n\r\n");
 
         break;
     default:

@@ -105,28 +105,6 @@ int main(void)
 
   __bis_SR_register(GIE);
 
-  printString("COMMANDS:\n\r\n");
-
-  printString("ENABLE = 0\n\r");
-  printString("ARGUMENTS = 0 (OBC) | 1(PAYLOAD) | 2(RF) | 3(ACS)\n\r\n");
-
-  printString("DISABLE = 1\n\r");
-  printString("ARGUMENTS = 0 (OBC) | 1(PAYLOAD) | 2(RF) | 3(ACS)\n\r\n");
-
-  printString("POWER MODE = 2\n\r");
-  printString("ARGUMENTS = 0 (NORMAL) | 1(RADIO) | 2(PICTURE)\n\r\n");
-
-  printString("MEASURE LINE LEVEL = 3\n\r");
-  printString("ARGUMENTS = 0 (OBC & PAYLOAD VOLATAGE)\n\r");
-  printString("**FOR TESTING**\n\r");
-
-  printString("CONFIGURE LTC2942 CC = 4\n\r");
-  printString("ARGUMENTS = 0 (CONTROL REGISTER; NORMAL MODE)\n\r\n");
-  printString("**FOR TESTING**\n\r");
-
-  printString("ENTER AS: (command)(argument)\n\r\n");
-
-
   while(1)
   {
 
