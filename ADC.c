@@ -1,8 +1,14 @@
 /*
- * ADC.c
+ * @file    ADC.c
+ * @brief   Defines the functions to initialize
+ *          the Analog to Digital MSP430 module.
+ *          It also defines the function to request
+ *          the voltage of a specific line and contains
+ *          the ADC interrupt service routine
  *
- *  Created on: Dec 19, 2019
- *      Author: LiamMacDonald
+ * @author  Liam JA MacDonald
+ * @date    19-Dec-2019 (created)
+ * @date    19-May-2020 (modified)
  */
 #define GLOBAL_ADC
 #include "ADC.h"
@@ -12,6 +18,13 @@
 
 volatile static double results[2];
 
+/*
+ * @brief   Initializes the MSP430 ADC module control
+ *          registers to enable ADC input ports, set
+ *          AVcc (3.33v) as the reference voltage, and
+ *          enable an ADC interrupt.
+ *
+ */
 void init_ADC(void)
 {
     REFCTL0 &= ~ REFON;
@@ -24,29 +37,53 @@ void init_ADC(void)
     ADC12IE =   ADC12IE1;                           // Enable ADC12IFG.3
     ADC12CTL0 |= ADC12ENC;                    // Enable conversions
 }
-
+/*
+ * @brief   Take ADC reading at each port.
+ *          A software triggered interrupt.
+ */
 void startADC(void)
 {
     ADC12CTL0 |= ADC12ENC;
     ADC12CTL0 |= ADC12SC;                   // Start convn - software trigger
     __delay_cycles(1000);
 }
-
-int returnResult(unsigned int subsystem, char* toReturn)
+/*
+ * @brief   Converts the desired ADC reading into
+ *          voltage. Reference voltage is 3.33v.
+ *
+ * @params  [in] unsigned int subsystem:
+ *          the desired index of the
+ *          results array.
+ *          [out] char* value:
+ *          voltage or current value
+ *          measured at the desired
+ *          subsystem
+ *
+ * @return  return SUCCESS if a valid subsystem is requested
+ *          FAILURE otherwise
+ */
+int returnResult(unsigned int subsystem, char* value)
 {
-    double resultValue;
+    double tempValue;
 
     if(subsystem<2)
     {
-        resultValue = 3.333*(results[subsystem]/4095);
-        sprintf(toReturn,"%.3f",resultValue);
+        tempValue = 3.333*(results[subsystem]/4095);
+        sprintf(value,"%.3f",resultValue);
         return SUCCESS;
     }
 
     return FAILURE;
 
 }
-
+/*
+ * @brief   ADC ISR.
+ *          After startADC triggers the interrupt
+ *          this function retrieves the new ADC readings
+ *          from the ADC12 memory and stores them in the
+ *          results array then clears the interrupt.
+ *
+ */
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
 #pragma vector=ADC12_VECTOR
 __interrupt void ADC12ISR (void)

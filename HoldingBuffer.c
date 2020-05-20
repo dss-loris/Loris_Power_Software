@@ -1,27 +1,29 @@
 /*
  * @file    HoldingBuffer.c
  * @brief   Defines the holding buffer used for
- *          holding characters before the ENTER
- *          character is received; contains all
- *          functionality to use the holding buffer
+ *          holding characters received via UART
+ *          and I2C serial communication protocols
+ *
  * @author  Liam JA MacDonald
  * @date    24-Sep-2019 (Created)
- * @date    9-Oct-2019 (Modified)
+ * @date    20-May-2020 (Modified)
  */
 
 #include "Utilities.h"
 #define GLOBAL_HOLDINGBUFFER
 #include "HoldingBuffer.h"
-/* Define an empty holding buffer*/
+
+/*holding buffer for UART and I2C*/
 static holdingBuffer    holdingBuffer_UART = {{EMPTY},EMPTY};
 static holdingBuffer    holdingBuffer_I2C = {{EMPTY},EMPTY};
 
-/*UART0 (TERMINAL) holding buffer, holds user train command*/
 
 /*
- * @brief   Adds a character to UART 0's holding register
- * @param   char c: character to be added to holding register
- * @return  @return  int return used as a boolean value,
+ * @brief   Adds a character to UART holding register
+ *
+ * @param   [in] char c: character to be added to holding register
+ *
+ * @return  int return used as a boolean value,
  *          if returns 1 the character was successfully added
  *          if returns 0 the holding buffer is full
  */
@@ -36,7 +38,8 @@ int addToBuffer_UART(char c)
 }
 
 /*
- * @brief   Removes a character from UART 0's holding register
+ * @brief   Removes a character from UART holding register
+ *
  * @return  int return used as a boolean value,
  *          if returns 1 the character was successfully removed
  *          if returns 0 the holding buffer is empty
@@ -54,7 +57,7 @@ int removeFromBuffer_UART(void)
 
 /*
  * @brief   Adds a NUL character to the end of
- *          the holding register for UART 0 , returns a pointer
+ *          the holding register for UART, returns a pointer
  *          to the start
  * @return  char*: pointer to the first character in the
  *          holding register
@@ -66,10 +69,11 @@ char* emptyBuffer_UART(void)
    return holdingBuffer_UART.buffer;
 }
 
-/*UART1 (Trainset) holding buffer, receives command from trainset*/
 /*
- * @brief   Adds a character to UART1's holding register
- * @param   char c: character to be added to holding register
+ * @brief   Adds a character to I2C holding register
+ *
+ * @param   [in] char c: character to be added to holding register
+ *
  * @return  @return  int return used as a boolean value,
  *          if returns 1 the character was successfully added
  *          if returns 0 the holding buffer is full
@@ -85,7 +89,9 @@ int addToBuffer_I2C(char c)
 }
 
 /*
- * @brief   Removes a character from UART1's holding register
+ * @brief   Removes a character from I2C holding register
+ *          *FUNCTION MAY NOT BE NEEDED*
+ *
  * @return  int return used as a boolean value,
  *          if returns 1 the character was successfully removed
  *          if returns 0 the holding buffer is empty
@@ -99,11 +105,11 @@ int removeFromBuffer_I2C(void)
     }
     return EMPTY;
 }
-
 /*
- * @brief   Adds a NUL character to the end of
- *          the holding register UART1's, returns a pointer
- *          to the start
+ * @brief   This function will be used for passing the contents
+ *          of the I2C holding buffer when a reception is complete
+ *          *THIS WILL CHANGE WHEN I2C RECPTION FUNTIONALITY IS ADDED*
+ *
  * @return  char*: pointer to the first character in the
  *          holding register
  */

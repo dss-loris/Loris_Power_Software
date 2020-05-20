@@ -1,8 +1,10 @@
 /*
- * ADC.h
+ * @file    ADC.h
+ * @brief   ADC function declarations
  *
- *  Created on: Dec 19, 2019
- *      Author: LiamMacDonald
+ * @author  Liam JA MacDonald
+ * @date    19-Dec-2019 (created)
+ * @date    19-May-2020 (modified)
  */
 #pragma once
 

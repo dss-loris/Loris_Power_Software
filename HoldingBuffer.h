@@ -1,10 +1,11 @@
 /*
  * @file    HoldingBuffer.h
- * @brief   Contains HoldingBuffer function prototypes
+ * @brief   Contains HoldingBuffer function declaration
  *          and the HoldingBuffer structure definition
+ *
  * @author  Liam JA MacDonald
  * @date    24-Sep-2019 (Created)
- * @date    9-Oct-2019 (Last Modified)
+ * @date    20-May-2020 (Last Modified)
  */
 #pragma once
 #define MAX_BUFFER 80

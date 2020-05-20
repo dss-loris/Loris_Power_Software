@@ -1,8 +1,13 @@
 /*
- * GPIO.h
+ * @file    GPIO.h
  *
- *  Created on: Dec 31, 2019
- *      Author: LiamMacDonald
+ * @brief   System Type enumeration,
+ *          Power Mode enumeration,
+ *          and GPIO function declarations
+ *
+ * @author  Liam JA MacDonald
+ * @date    31-Dec-2019 (created)
+ * @date    20-May-2020 (modified)
  */
 #pragma once
 enum    subsystemType { OBC, PAYLOAD, RF, ACS};

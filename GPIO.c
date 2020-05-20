@@ -1,8 +1,15 @@
 /*
- * GPIO.c
+ * @file    GPIO.c
  *
- *  Created on: Dec 31, 2019
- *      Author: LiamMacDonald
+ * @brief   Input and Output pin initialization
+ *          functions are defined. The setPin,
+ *          clearPin, and enterPowerMode functions
+ *          called in the CommandTable.c file are
+ *          defined
+ *
+ * @author  Liam JA MacDonald
+ * @date    31-Dec-2019 (created)
+ * @date    20-May-2020 (modified)
  */
 #define GLOBAL_GPIO
 #include "GPIO.h"
@@ -14,6 +21,18 @@
 
 static interruptType faultInt = {FAULT,NUL};
 
+/*
+ * @brief   Initializes the MSP430 GPIO module control
+ *          registers to configure output pins:
+ *          8.1 (OBC)
+ *          8.2 (PAYLOAD)
+ *          3.7 (RF)
+ *          4.0 (ACS)
+ *
+ *          Set pins corresponding to OBC and ACS so the
+ *          EPS is initially in Normal power mode
+ *
+ */
 void setOutputPins(void)
 {
     P8DIR |= BIT1+BIT2;             // P1.0 set as output
@@ -25,6 +44,15 @@ void setOutputPins(void)
 
 }
 
+/*
+ * @brief   Initializes the MSP430 GPIO module control
+ *          registers to configure input pins:
+ *          2.2 (RF Fault)
+ *
+ *          It enables interrupts on these pins, which
+ *          signify a fault condition occurred in the
+ *          corresponding subsystem
+ */
 void setInputPins(void)
 {
     P2DIR &= ~BIT2;             // P2.2 set as input
@@ -34,7 +62,15 @@ void setInputPins(void)
     P2IE &= ~0xFF; // ensure only pin 2 is interupt enabled
     P2IE |= BIT2;
 }
-
+/*
+ * @brief Sets Output pin corresponding to the
+ *        pin argument high, effectively enabling
+ *        a subsystem. Should only be called explicitly
+ *        to enable a subsystem after a fault condition.
+ *
+ * @param [in] int pin:
+ *        subsystem to be enabled
+ */
 void setPin(int pin)
 {
     switch (pin)
@@ -57,7 +93,16 @@ void setPin(int pin)
         break;
     }
 }
-
+/*
+ * @brief Clear Output pin corresponding to the
+ *        pin argument, effectively disabling
+ *        a subsystem. Shouldn't be called
+ *        explicitly, will be made private in
+ *        operational code
+ *
+ * @param [in] int pin:
+ *        subsystem to be disabled
+ */
 void clearPin(int pin)
 {
     switch (pin)
@@ -80,8 +125,12 @@ void clearPin(int pin)
             break;
       }
 }
-
-
+/*
+ * @brief Sets Output pins according to the power mode requested.
+ *
+ * @param [in] int mode:
+ *        Desired Power mode
+ */
 void enterPowerMode(int mode)
 {
     switch (mode)
@@ -109,7 +158,13 @@ void enterPowerMode(int mode)
         break;
     }
 }
-
+/*
+ * @brief   GPIO ISR.
+ *          When a fault condition is triggered at an input port,
+ *          execution enters the ISR to send a UART packet to the
+ *          OBC to inform it of a fault condition.
+ *
+ */
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
 #pragma vector=PORT2_VECTOR
 __interrupt void Port_2 (void)

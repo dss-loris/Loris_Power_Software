@@ -1,8 +1,10 @@
 /*
- * I2C.h
+ * @file    I2C.h
+ * @brief   I2C function declarations
  *
- *  Created on: Feb 14, 2020
- *      Author: LiamMacDonald
+ * @author  Liam JA MacDonald
+ * @date    14-Feb-2019 (created)
+ * @date    20-May-2020 (modified)
  */
 #pragma once
 
