@@ -138,6 +138,11 @@ int main(void)
                           }
                           break;
                       case I2C:
+                          printString("Received on I2C:\n\r");
+                          enqueue(OUTPUT_UART,receivedInterrupt);
+                          printString(NEW_LINE);
+                          printString(NEW_LINE);
+
                           break;
                       case FAULT:
                           printString("FAULT ON RF LINE\n\r");
