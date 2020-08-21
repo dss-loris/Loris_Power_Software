@@ -1,10 +1,13 @@
 /*
  * @file    CommandTable.h
- * @details Contains process function prototype
- *          and the command structure definition
+ *
+ * @details Contains process function definition
+ *          the command structure definition,
+ *          and the deserialize union definition
+ *
  * @author  Liam JA MacDonald
  * @date    24-Sep-2019 (Created)
- * @date    9-Oct-2019 (Last Modified)
+ * @date    20-May-2020 (Last Modified)
  */
 
 #pragma once
@@ -13,20 +16,23 @@
  * @brief   Command structure
  * @details Holds all variables needed to identify
  *          and execute a command.
- *          char* cmdType: command string
- *          int length: length of the command string
- *          int (*execute)(char*): function pointer that points
- *                                 to the function to call on a
- *                                 successful match
+ *
+ *          type (8 bits): Requested Command
+ *
+ *          argument (8 bits): Additional information
+ *          needed for command execution
  */
-
-
 typedef struct command_
 {
     unsigned type : 8;
     unsigned argument: 8;
 }command;
-
+/*
+ * @brief   Deserialize Union
+ *
+ * @details Allows a string to be refferenced
+ *          as a command object
+ */
 typedef union deserialize_command_
 {
     char* input;

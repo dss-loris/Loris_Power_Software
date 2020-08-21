@@ -1,14 +1,13 @@
 /*
  * @file    InterruptType.h
  * @brief   Defines the interruptType structure
+ *          Enumerates Protocols
  */
 #pragma once
 /*
  * @brief   Interrupt Type structure
- * @details int type:       0 is a INPUT interrupt
- *                          1 is a OUTPUT interrupt
  *
- *          int protocol:   0 UART
+ * @details int protocol:   0 UART
  *                          1 I2C
  *                          2 FAULT
  *

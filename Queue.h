@@ -3,6 +3,7 @@
  * @brief   Contains queue function prototypes
  *          and the queue structure definition
  * @author  Liam JA MacDonald
+ *
  * @date    23-Sep-2019 (Created)
  * @date    10-Oct-2019 (Last Modified)
  */
@@ -14,7 +15,7 @@ enum queueType { INPUT, OUTPUT_UART, OUTPUT_I2C};
 #define NUMBER_OF_QUEUES 3
 /*
  * @brief   queue structure
- * @details interruptType fifo[]: array for folding the interrupt structures
+ * @details interruptType fifo[]: array for holding the interrupt structures
  *          int writePtr:         the index where the next interrupt
  *                                can be added
  *          int readPtr:          the index where the next interrupt

@@ -1,10 +1,14 @@
 /*
- * I2C.c
+ * @file    I2C.c
  *
- *  Created on: Feb 14, 2020
- *      Author: LiamMacDonald
+ * @details Contains initialization routines to set
+ *          a I2C interrupts for transmission and receive.
+ *          Definition of the I2C ISR
+ *
+ * @author  Liam JA MacDonald
+ * @date    14-Feb-2019 (created)
+ * @date    20-May-2020 (modified)
  */
-
 #define GLOBAL_I2C
 #include "I2C.h"
 #include <msp430.h>
@@ -14,9 +18,17 @@
 #include "Utilities.h"
 
 #define CC_ADDRESS 0x64
-static int receiveFlag;
 
-void init_I2C_B0(void){
+
+/*
+ * @brief   Initializes the MSP430 I2C B0 module
+ *          Configures the control register so
+ *          it's set to operate as a I2C master
+ *          and enables receive, transmit and NACK
+ *          interrupts
+ */
+void init_I2C_B0(void)
+{
 
     P3SEL |= BIT0+BIT1;                       // P3.0,1 = USCI_B0 SDA/SCL
     UCB0CTL1 |= UCSWRST;                      // Enable SW reset
@@ -25,9 +37,14 @@ void init_I2C_B0(void){
     UCB0BR0 = 12;                             // fSCL = SMCLK/12 = ~100kHz
     UCB0BR1 = 0;
     UCB0CTL1 &= ~UCSWRST;                     // Clear SW reset, resume operation
-    UCB0IE |= UCRXIE | UCTXIE | UCNACKIE;               //Enable RX and TX interrupt
+    UCB0IE |= UCRXIE | UCTXIE | UCNACKIE;               //Enable RX, TX, and NACK interrupts
 }
 
+
+/*
+ * @brief   Transmits all bytes in the
+ *          I2C output queue
+ */
 void Transmit(void){
 
     receiveFlag = FALSE;
@@ -51,8 +68,25 @@ void Receive(void){
     while (UCB0CTL1 & UCTXSTT);
     UCB0CTL1 |= UCTXSTP;
     for(i=0;i<10;i++);
+
 }
 
+
+/*
+ * @brief   I2C B0 ISR.
+ *          When an I2C interrupt is triggered execution is
+ *          passed to this ISR handle the interrupt.
+ *
+ *          case 4: NACK interrupt, meaning data byte
+ *          wasn't acknowledged
+ *
+ *          case 10: RX interrupt, a byte has been
+ *          received
+ *
+ *          case 12: TX interrupt, a byte is done
+ *          sending and the buffer is ready for another
+ *
+ */
 #pragma vector = USCI_B0_VECTOR
 __interrupt void USCI_B0_ISR(void)
 {

@@ -2,6 +2,10 @@
  * @file    Queue.c
  * @brief   Defines interrupt queues
  *          Contains enqueue and dequeue functionality
+ *          The ISRs use these queues to minimize the
+ *          amount of time in the ISR. The main function
+ *          then dequeues from the Input interrupt queue
+ *
  * @author  Liam JA MacDonald
  * @date    23-Sep-2019 (Created)
  * @date    10-Oct-2019 (Modified)
@@ -13,11 +17,13 @@
 #include "UART.h"
 #include "HoldingBuffer.h"
 
-/*Declare queue array for
- * INPUT (0),
- * OUTPUT_UART (1),
- * and OUTPUT_I2C (2)
- * interrupts*/
+/*  Declare queue array for interrupts
+ *
+ *  INPUT (0),
+ *  OUTPUT_UART (1),
+ *  OUTPUT_I2C (2)
+ *
+ */
 static queue interruptQueues[NUMBER_OF_QUEUES] =
     {{{RESET},RESET,RESET},{{RESET},RESET,RESET},{{RESET},RESET,RESET}};
 
@@ -42,8 +48,8 @@ int getOutputCountI2C(void)
  */
 int enqueue(int queueType, interruptType it)
 {
-    if((queueType==OUTPUT_UART)&&(interruptQueues[queueType].writePtr==interruptQueues[queueType].readPtr))//buffer is empty
-    {
+    if((queueType==OUTPUT_UART)&&(interruptQueues[queueType].writePtr==interruptQueues[queueType].readPtr))
+    {   //buffer is empty
         force_UART_A1_Output(it.data);
         return EMPTY;
     }else if(queueType==OUTPUT_I2C)
@@ -63,7 +69,7 @@ int enqueue(int queueType, interruptType it)
 }
 
 /*
- * @brief   Removes an interrupt to an interrupt queue.
+ * @brief   Removes an interrupt from an interrupt queue.
  * @param   [in] int queueType: specifies which queue to add to
  *                              INPUT (0); OUTPUT(1)
  *          [in] interruptType it: incoming interrupt
