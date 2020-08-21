@@ -27,6 +27,7 @@
 #define DATA_REQUEST '3'
 #define COULOMB_COUNT_INIT '4'//testing will eventually part of Data request
 #define COULOMB_COUNT '5'
+#define DEBUG_MENU '6'
 
 #define CC_CONTROL_R 0x01
 #define CC_CONTROL_VALUE 0x3c
@@ -106,6 +107,14 @@ void process( char* serializedCommand)
 
         break;
     case COULOMB_COUNT:
+
+        printString("\n\rReceive from LTC2942\n\r ");
+        cc_register.data = CC_CONTROL_R;
+        enqueue(OUTPUT_I2C, cc_register);
+        Receive();
+
+        break;
+    case DEBUG_MENU:
 
         printString("\n\rCOMMANDS:\n\r\n");
 

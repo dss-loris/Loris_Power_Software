@@ -19,6 +19,7 @@
 
 #define CC_ADDRESS 0x64
 
+
 /*
  * @brief   Initializes the MSP430 I2C B0 module
  *          Configures the control register so
@@ -28,6 +29,7 @@
  */
 void init_I2C_B0(void)
 {
+
     P3SEL |= BIT0+BIT1;                       // P3.0,1 = USCI_B0 SDA/SCL
     UCB0CTL1 |= UCSWRST;                      // Enable SW reset
     UCB0CTL0 = UCMST + UCMODE_3 + UCSYNC;     // I2C Master, synchronous mode
@@ -38,32 +40,37 @@ void init_I2C_B0(void)
     UCB0IE |= UCRXIE | UCTXIE | UCNACKIE;               //Enable RX, TX, and NACK interrupts
 }
 
+
 /*
  * @brief   Transmits all bytes in the
  *          I2C output queue
  */
-void Transmit(void)
-{
+void Transmit(void){
+
+    receiveFlag = FALSE;
     int i=0;
     UCB0I2CSA = CC_ADDRESS;
     while (UCB0CTL1 & UCTXSTP);             // Ensure stop condition got sent
     UCB0CTL1 |= UCTR + UCTXSTT;             // I2C Control Register
-    for(i=0;i<10;i++);                      //DELAY
+    for(i=0;i<10;i++);
 }
 
-/*
- * @brief   *NOT TESTED OR OPERATIONAL*
- *          This will be called to request data
- *          from an I2C slave
- */
-void Receive(void)
-{
-        while (UCB0CTL1 & UCTXSTP);             // Ensure stop condition got sent. Its automatically cleared once sent
-        UCB0CTL1 &= ~UCTR ;                     // Clear UCTR
-        UCB0CTL1 |= UCTXSTT;                    // I2C start condition
-        while (UCB0CTL1 & UCTXSTT);             // Start condition sent?
-        UCB0CTL1 |= UCTXSTP;                    // I2C stop condition
+void Receive(void){
+
+    receiveFlag = TRUE;
+    int i=0;
+    UCB0I2CSA = CC_ADDRESS;
+    while (UCB0CTL1 & UCTXSTP);             // Ensure stop condition got sent
+    UCB0CTL1 |= UCTR + UCTXSTT;             // I2C Control Register
+    for(i=0;i<10;i++);
+    UCB0CTL1 &= ~UCTR ;                     // Clear UCTR
+    UCB0CTL1 |= UCTXSTT;                    // I2C start condition
+    while (UCB0CTL1 & UCTXSTT);
+    UCB0CTL1 |= UCTXSTP;
+    for(i=0;i<10;i++);
+
 }
+
 
 /*
  * @brief   I2C B0 ISR.
@@ -93,13 +100,15 @@ __interrupt void USCI_B0_ISR(void)
       case  2: break;                           // Vector  2: ALIFG
       case  4:                            // Vector  4: NACKIFG
         UCB0CTL1 |= UCTXSTP;
-        UCB0IFG &= ~UCTXIFG;
+        UCB0IFG &= ~UCNACKIFG;
         break;
       case  6: break;                           // Vector  6: STTIFG
       case  8: break;                           // Vector  8: STPIFG
       case 10:                            // Vector 10: RXIFG
         inputI2C.data = UCB0RXBUF;      // USCI_A0 TX buffer ready?
         enqueue(INPUT, inputI2C);                // TX -> RXed character
+        //UCB0CTL1 |= UCTXSTP;// I2C stop condition
+        UCB0IFG &= ~UCRXIFG;
         break;
       case 12:                                  // Vector 12: TXIFG
         if (getOutputCountI2C())
@@ -110,8 +119,12 @@ __interrupt void USCI_B0_ISR(void)
         }
         else
         {
+            if(!receiveFlag)
+            {
             UCB0CTL1 |= UCTXSTP;// I2C stop condition
+            }
             UCB0IFG &= ~UCTXIFG;
+
         }
         break;
       default: break;
