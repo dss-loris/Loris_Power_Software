@@ -89,8 +89,9 @@ int main(void)
       }
       else
       {
-          //__bis_SR_register(GIE);     // Enter LPM4, Enable interrupts
-//          __no_operation();                       // For debugger
+//          __bis_SR_register(GIE);     // Enter LPM4, Enable interrupts
+//          __low_power_mode_2();
+          __no_operation();                       // For debugger
       }
   }
 }

@@ -69,7 +69,7 @@ int returnResult(unsigned int subsystem, char* value)
     if(subsystem<2)
     {
         tempValue = 3.333*(results[subsystem]/4095);
-        sprintf(value,"%.3f",resultValue);
+        sprintf(value,"%.3f",tempValue);
         return SUCCESS;
     }
 

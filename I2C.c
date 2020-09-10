@@ -18,7 +18,7 @@
 #include "Utilities.h"
 
 #define CC_ADDRESS 0x64
-
+static int receiveFlag;
 
 /*
  * @brief   Initializes the MSP430 I2C B0 module
